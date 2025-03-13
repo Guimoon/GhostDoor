@@ -1,6 +1,7 @@
 using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class BtnType : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -23,7 +24,7 @@ public class BtnType : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         switch (currentType)
         {
             case BTNType.Start:
-                Debug.Log("게임시작");
+                SceneManager.LoadScene("Demo");
                 break;
 
             case BTNType.Option:
