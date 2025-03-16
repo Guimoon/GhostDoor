@@ -4,118 +4,43 @@ using System.Collections;
 
 public class EstUse : MonoBehaviour
 {
-    public Slider healthEst;
-    public Button healEstButton;
-    public float healIncreaseAmount = 30f;
+    public Slider healthEst; // ì²´ë ¥ UI ìŠ¬ë¼ì´ë”
+    public float healIncreaseAmount = 30f; // í•œ ë²ˆì— íšŒë³µë˜ëŠ” ì²´ë ¥ëŸ‰
+    public float estRemain = 4f; // ë‚¨ì€ ì—ìŠ¤íŠ¸ ê°œìˆ˜
+    public float healSpeed = 20f; // ì²´ë ¥ì´ ì°¨ì˜¤ë¥´ëŠ” ì†ë„
 
-    //public Slider attackEst;
-    //public Button attackEstButton;
-    //public float attackIncreaseAmount = 10f;
-
-    public float estRemain = 4f;
-
-    //public float cooldownTime = 60f; // °ø°Ý ¿¡½ºÆ® ¹öÆ° Àç»ç¿ë ´ë±â ½Ã°£ (ÃÊ)
-    //public float attackDuration = 10f; // °ø°Ý·Â Áõ°¡ Áö¼Ó ½Ã°£ (ÃÊ)
-
-   // private bool isAttackCooldown = false; // °ø°Ý ¿¡½ºÆ® ¹öÆ°ÀÌ Äð´Ù¿î ÁßÀÎÁö È®ÀÎ
-   // private bool isAttackActive = false; // °ø°Ý Áõ°¡ È¿°ú°¡ È°¼ºÈ­µÇ¾ú´ÂÁö È®ÀÎ
-
-    void Start()
+    void Update()
     {
-        healEstButton.onClick.AddListener(IncreaseHeal);
-        //attackEstButton.onClick.AddListener(IncreaseAttack);
-
-        UpdateButtons();
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            IncreaseHeal();
+        }
     }
 
     void IncreaseHeal()
     {
         if (estRemain > 0)
         {
-            healthEst.value = Mathf.Clamp(healthEst.value + healIncreaseAmount, healthEst.minValue, healthEst.maxValue);
+            StartCoroutine(HealOverTime(healIncreaseAmount)); // ì²´ë ¥ì„ ì²œì²œížˆ ì¦ê°€ì‹œí‚¤ëŠ” ì½”ë£¨í‹´ ì‹¤í–‰
             UseEstus();
         }
     }
 
-    /*
-    void IncreaseAttack()
+    IEnumerator HealOverTime(float amount)
     {
-        if (estRemain > 0 && !isAttackCooldown && !isAttackActive)
+        float targetHealth = Mathf.Clamp(healthEst.value + amount, healthEst.minValue, healthEst.maxValue);
+        
+        while (healthEst.value < targetHealth)
         {
-            attackEst.value = Mathf.Clamp(attackEst.value + attackIncreaseAmount, attackEst.minValue, attackEst.maxValue);
-            UseEstus();
-            StartCoroutine(AttackEffectDuration()); // Áö¼Ó½Ã°£ Àû¿ë
-            StartCoroutine(AttackCooldown()); // Äð´Ù¿î ½ÃÀÛ
+            healthEst.value += healSpeed * Time.deltaTime;
+            yield return null;
         }
+
+        healthEst.value = targetHealth;
     }
-    */
 
     void UseEstus()
     {
         estRemain--;
-        Debug.Log("³²Àº ¿¡½ºÆ® °³¼ö: " + estRemain);
-
-        UpdateButtons();
     }
-
-    void UpdateButtons()
-    {
-        // ¿¡½ºÆ® °³¼ö°¡ 0°³¸é ¸ðµç ¹öÆ° ºñÈ°¼ºÈ­
-        if (estRemain <= 0)
-        {
-            healEstButton.interactable = false;
-            //attackEstButton.interactable = false;
-            Debug.Log("¿¡½ºÆ®¸¦ ´Ù »ç¿ëÇß½À´Ï´Ù!");
-            return; // 0°³¸é ¿©±â¼­ ÇÔ¼ö Á¾·á
-        }
-
-        /*
-        // Äð´Ù¿î ÁßÀÌ¸é °ø°Ý ¹öÆ° ºñÈ°¼ºÈ­
-        if (isAttackCooldown)
-        {
-            attackEstButton.interactable = false;
-        }
-        else
-        {
-            attackEstButton.interactable = true;
-        }
-        */
-    }
-
-    /*
-    IEnumerator AttackEffectDuration()
-    {
-        isAttackActive = true;
-        Debug.Log("°ø°Ý·ÂÀÌ Áõ°¡Çß½À´Ï´Ù! Áö¼Ó ½Ã°£: " + attackDuration + "ÃÊ");
-
-        yield return new WaitForSeconds(attackDuration);
-
-        attackEst.value = Mathf.Clamp(attackEst.value - attackIncreaseAmount, attackEst.minValue, attackEst.maxValue);
-        isAttackActive = false;
-        Debug.Log("°ø°Ý·Â Áõ°¡ È¿°ú°¡ »ç¶óÁ³½À´Ï´Ù.");
-    }
-
-    IEnumerator AttackCooldown()
-    {
-        isAttackCooldown = true;
-        attackEstButton.interactable = false;
-
-        float remainingTime = cooldownTime;
-
-        while (remainingTime > 0)
-        {
-            if (remainingTime % 10 == 0)
-            {
-                Debug.Log("°ø°Ý ¿¡½ºÆ® Àç»ç¿ë±îÁö ³²Àº ½Ã°£: " + remainingTime + "ÃÊ");
-            }
-
-            yield return new WaitForSeconds(1f);
-            remainingTime--;
-        }
-
-        isAttackCooldown = false;
-        UpdateButtons(); // ¹öÆ° »óÅÂ ´Ù½Ã È®ÀÎ
-        Debug.Log("°ø°Ý ¿¡½ºÆ®¸¦ ´Ù½Ã »ç¿ëÇÒ ¼ö ÀÖ½À´Ï´Ù!");
-    }
-    */
 }
