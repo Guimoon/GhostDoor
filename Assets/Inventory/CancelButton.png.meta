@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5a1d10a2d1aea3d42a4d93edc75a8723
+guid: 727e266d07d26894095ef4928c96ca5d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2395810062553750391
-    second: 1742029860602_0
+      213: 1196457451817484290
+    second: CancelButton_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -97,19 +97,6 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
-    buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
@@ -126,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 1742029860602_0
+      name: CancelButton_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2135
-        height: 1305
+        x: 4
+        y: 4
+        width: 23
+        height: 23
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 77b92dfee80af3120800000000000000
-      internalID: 2395810062553750391
+      spriteID: 200437c96bbaa9010800000000000000
+      internalID: 1196457451817484290
       vertices: []
       indices: 
       edges: []
@@ -161,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      1742029860602_0: 2395810062553750391
+      CancelButton_0: 1196457451817484290
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
