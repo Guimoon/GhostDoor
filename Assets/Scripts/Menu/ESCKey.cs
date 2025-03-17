@@ -3,32 +3,33 @@ using UnityEngine;
 public class ESCKey : MonoBehaviour
 {
     public GameObject targetCanvas; // UI 캔버스
-
-    private float previousTimeScale; // 이전 타임스케일 저장용 변수
-
-    void Start()
+    private bool isPaused = false; // 현재 일시정지 상태
+    
+    void Awake()
     {
         targetCanvas.SetActive(false); // 게임 시작 시 비활성화
-        previousTimeScale = Time.timeScale; // 초기 타임스케일 저장
+        Time.timeScale = 1.0f; // 게임 시작 시 확실하게 1로 설정
+
+        openOption();
     }
 
     void Update()
     {
+        openOption();
+    }
+
+
+    // 옵션창 띄우기 함수
+    void openOption()
+    {
         if (Input.GetKeyDown(KeyCode.Escape)) // ESC 키 입력 감지
         {
-            bool newActiveState = !targetCanvas.activeSelf;
-            targetCanvas.SetActive(newActiveState); // 현재 상태 반대로 변경
+            isPaused = !isPaused; // 상태 반전
+            Debug.Log(isPaused);
+            targetCanvas.SetActive(isPaused); // 옵션창 표시 여부 변경
             
-            // 시간 제어 추가
-            if (newActiveState) // 캔버스가 활성화되면 시간 정지
-            {
-                previousTimeScale = Time.timeScale; // 현재 타임스케일 저장
-                Time.timeScale = 0f; // 시간 정지
-            }
-            else // 캔버스가 비활성화되면 시간 복원
-            {
-                Time.timeScale = previousTimeScale; // 이전 타임스케일로 복원
-            }
+            // 시간 제어
+            Time.timeScale = isPaused ? 0f : 1f; // 옵션창 활성화 시 정지, 비활성화 시 원래대로
         }
     }
 }
