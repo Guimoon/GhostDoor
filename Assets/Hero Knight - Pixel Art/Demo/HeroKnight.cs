@@ -154,7 +154,6 @@ public class HeroKnight : MonoBehaviour {
             m_animator.SetBool("Grounded", m_grounded);
             m_body2d.linearVelocity = new Vector2(m_body2d.linearVelocity.x, m_jumpForce);
             m_groundSensor.Disable(0.2f);
-            Debug.Log("Jump key pressed");
         }
 
         //Run
