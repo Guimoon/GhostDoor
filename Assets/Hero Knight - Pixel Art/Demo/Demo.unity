@@ -5677,7 +5677,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   climbSpeed: 5
-  wallCheckDistance: 1
+  wallCheckDistance: 0.43
   wallLayer:
     serializedVersion: 2
     m_Bits: 8

@@ -14,11 +14,13 @@ public class WallClimbing : MonoBehaviour
     
     private Rigidbody2D rb;
     private Animator animator; // 애니메이터가 있다면 사용
+    private SpriteRenderer spriteRenderer;
     
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         originalGravity = rb.gravityScale;
     }
     
@@ -26,7 +28,6 @@ public class WallClimbing : MonoBehaviour
     {
         CheckForWall();
         
-        // F 키를 누르고 있는 동안 벽 오르기 처리
         if (isWallDetected)
         {
             HandleClimbing();
@@ -35,12 +36,18 @@ public class WallClimbing : MonoBehaviour
         {
             StopClimbing();
         }
+
+        if (isWallDetected && Input.GetKeyDown("space"))
+        {
+            isWallDetected = !isWallDetected;
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
     }
     
     void CheckForWall()
     {
         // 캐릭터 앞에 벽이 있는지 확인
-        Vector2 direction = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
+        Vector2 direction = !spriteRenderer.flipX ? Vector2.right : Vector2.left;
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, wallCheckDistance, wallLayer);
         
         // 디버그 레이로 확인 (게임 뷰에서 볼 수 있음)
