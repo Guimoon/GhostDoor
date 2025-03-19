@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.Rendering.Universal;
 
@@ -15,6 +16,9 @@ public class HeroKnight : MonoBehaviour
     [SerializeField] private float climbSpeed = 3f;
     [SerializeField] private float wallCheckDistance = 0.6f;
     [SerializeField] private LayerMask wallLayer;
+    //-------------------------------------------------
+    public Slider hpBar; // 체력 UI 슬라이더
+    private bool Alive = true;
     //-------------------------------------------------
     private Animator m_animator;
     private Rigidbody2D m_body2d;
@@ -103,23 +107,29 @@ public class HeroKnight : MonoBehaviour
         m_animator.SetFloat("AirSpeedY", m_body2d.linearVelocity.y);
 
         // -- Handle Animations --
-        //Wall Slide
-        m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
-        m_animator.SetBool("WallSlide", m_isWallSliding);
+        // //Wall Slide
+        // m_isWallSliding = (m_wallSensorR1.State() && m_wallSensorR2.State()) || (m_wallSensorL1.State() && m_wallSensorL2.State());
+        // m_animator.SetBool("WallSlide", m_isWallSliding);
 
         //Death
-        if (Input.GetKeyDown("e") && !m_rolling)
+        if (hpBar.value == hpBar.minValue && !m_rolling && Alive)
         {
             m_animator.SetBool("noBlood", m_noBlood);
             m_animator.SetTrigger("Death");
+            Alive = !Alive;
         }
 
-        //Hurt
-        else if (Input.GetKeyDown("q") && !m_rolling)
-            m_animator.SetTrigger("Hurt");
+        if (Input.GetKeyDown("r"))
+        {
+            hpBar.value = hpBar.minValue;
+        }
+
+        // //Hurt
+        // else if (Input.GetKeyDown("q") && !m_rolling)
+        //     m_animator.SetTrigger("Hurt");
 
         //Attack
-        else if (Input.GetMouseButtonDown(0) && m_timeSinceAttack > 0.25f && !m_rolling)
+        else if (Input.GetKeyDown("m") && m_timeSinceAttack > 0.25f && !m_rolling)
         {
             m_currentAttack++;
 
@@ -148,13 +158,13 @@ public class HeroKnight : MonoBehaviour
         else if (Input.GetMouseButtonUp(1))
             m_animator.SetBool("IdleBlock", false);
 
-        // Roll
-        else if (Input.GetKeyDown("left shift") && !m_rolling && !m_isWallSliding)
-        {
-            m_rolling = true;
-            m_animator.SetTrigger("Roll");
-            m_body2d.linearVelocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.linearVelocity.y);
-        }
+        // // Roll
+        // else if (Input.GetKeyDown("left shift") && !m_rolling && !m_isWallSliding)
+        // {
+        //     m_rolling = true;
+        //     m_animator.SetTrigger("Roll");
+        //     m_body2d.linearVelocity = new Vector2(m_facingDirection * m_rollForce, m_body2d.linearVelocity.y);
+        // }
 
 
         //Jump
@@ -208,14 +218,18 @@ public class HeroKnight : MonoBehaviour
     {
         // 캐릭터 앞에 벽이 있는지 확인
         Vector2 direction = !m_spriteRenderer.flipX ? Vector2.right : Vector2.left;
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, wallCheckDistance, wallLayer);
+        
+        // y값을 -0.3만큼 낮추어 시작 위치를 조정
+        Vector2 startPosition = new Vector2(transform.position.x, transform.position.y - 0.1f);
+        
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, direction, wallCheckDistance, wallLayer);
         
         // 디버그 레이로 확인 (게임 뷰에서 볼 수 있음)
-        Debug.DrawRay(transform.position, direction * wallCheckDistance, Color.red);
+        Debug.DrawRay(startPosition, direction * wallCheckDistance, Color.red);
         
         isWallDetected = hit.collider != null;
     }
-    
+
     void HandleClimbing()
     {
         // 벽을 오르는 중이라면 중력을 0으로 설정
@@ -242,14 +256,6 @@ public class HeroKnight : MonoBehaviour
         // {
         //     animator.SetBool("IsClimbing", false);
         // }
-    }
-    
-    // 에디터에서 벽 감지 범위를 시각적으로 표시
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Vector3 direction = transform.localScale.x > 0 ? Vector3.right : Vector3.left;
-        Gizmos.DrawLine(transform.position, transform.position + direction * wallCheckDistance);
     }
 
     // Animation Events
